@@ -1,0 +1,33 @@
+{% sw_extends '@Storefront/storefront/page/checkout/finish/index.html.twig' %}
+
+{% block page_checkout_finish_details %}
+    {{ parent() }}
+
+    {% if page.extensions.rcQrCheckOut is defined and page.extensions.rcQrCheckOut.enabled %}
+        {% block page_checkout_finish_rc_qr_checkout %}
+            {% set rcQr = page.extensions.rcQrCheckOut %}
+            <div class="rc-qr-checkout card mt-4">
+                <div class="card-body text-center">
+                    <h4 class="rc-qr-checkout__title">
+                        {{ "rc-qr-checkout.title"|trans }}
+                    </h4>
+                    <p class="rc-qr-checkout__hint">
+                        {{ "rc-qr-checkout.hint"|trans }}
+                    </p>
+                    <div class="rc-qr-checkout__code" aria-label="{{ "rc-qr-checkout.ariaLabel"|trans }}">
+                        {# SVG kommt ausschliesslich aus endroid/qr-code — kontrollierter Inhalt, kein User-Input. #}
+                        {{ rcQr.svg|raw }}
+                    </div>
+                    <dl class="rc-qr-checkout__details row justify-content-center mt-3 mb-0 small">
+                        <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.recipient"|trans }}</dt>
+                        <dd class="col-8 col-sm-6 text-start">{{ rcQr.recipient }}</dd>
+                        <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.iban"|trans }}</dt>
+                        <dd class="col-8 col-sm-6 text-start">{{ rcQr.iban }}</dd>
+                        <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.amount"|trans }}</dt>
+                        <dd class="col-8 col-sm-6 text-start">{{ rcQr.amount|currency }}</dd>
+                    </dl>
+                </div>
+            </div>
+        {% endblock %}
+    {% endif %}
+{% endblock %}

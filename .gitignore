@@ -1,0 +1,32 @@
+# ============================================================
+# .gitignore – RcQrCheckOut
+# ============================================================
+
+# IDE
+.idea/
+.vscode/
+
+# Composer / PHP
+vendor/
+composer.phar
+
+# Build / Cache
+var/
+.phpunit.cache/
+.php-cs-fixer.cache
+
+# Frontend
+node_modules/
+/src/Resources/app/storefront/dist/
+/src/Resources/app/administration/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+secrets.json

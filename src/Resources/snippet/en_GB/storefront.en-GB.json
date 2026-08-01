@@ -1,0 +1,10 @@
+{
+  "rc-qr-checkout": {
+    "title": "Pay by bank transfer",
+    "hint": "Scan the GiroCode with your banking app to start the transfer with a pre-filled amount and reference.",
+    "ariaLabel": "GiroCode for the SEPA transfer",
+    "recipient": "Beneficiary",
+    "iban": "IBAN",
+    "amount": "Amount"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "rc-qr-checkout": {
+    "title": "Per Ueberweisung bezahlen",
+    "hint": "Scannen Sie den GiroCode mit Ihrer Banking-App, um die Ueberweisung mit vorausgefuelltem Betrag und Verwendungszweck zu starten.",
+    "ariaLabel": "GiroCode fuer die SEPA-Ueberweisung",
+    "recipient": "Empfaenger",
+    "iban": "IBAN",
+    "amount": "Betrag"
+  }
+}
