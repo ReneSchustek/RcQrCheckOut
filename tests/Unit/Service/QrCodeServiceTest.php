@@ -48,7 +48,7 @@ final class QrCodeServiceTest extends TestCase
     public function testGenerateSvgWithUmlautInUrlEncodesCorrectly(): void
     {
         $service = new QrCodeService();
-        $svg = $service->generateSvg('https://example.com/bestellung/aenderung');
+        $svg = $service->generateSvg('https://example.com/bestellung/änderung');
 
         // SVG wird ohne Exception erzeugt — UTF-8-Encoding greift
         self::assertNotEmpty($svg);

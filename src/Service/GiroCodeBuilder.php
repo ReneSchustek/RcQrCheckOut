@@ -7,10 +7,10 @@ namespace Ruhrcoder\RcQrCheckOut\Service;
 /**
  * Baut den GiroCode-Datensatz nach EPC069-12 („BCD"), den deutsche Banking-Apps als
  * SEPA-Ueberweisung einlesen. Reiner, seiteneffektfreier Builder — die Validierung
- * (IBAN Mod-97, EUR-Pflicht, Laengen, Betragsformat) ist vollstaendig gekapselt.
+ * (IBAN Mod-97, EUR-Pflicht, Längen, Betragsformat) ist vollständig gekapselt.
  *
  * Der Datensatz besteht aus LF-getrennten Zeilen (max. 331 Bytes gesamt):
- *   BCD / Version 002 / Zeichensatz 1 (UTF-8) / SCT / BIC(optional) / Empfaenger /
+ *   BCD / Version 002 / Zeichensatz 1 (UTF-8) / SCT / BIC(optional) / Empfänger /
  *   IBAN / EUR<Betrag> / Purpose-Code(leer) / Verwendungszweck(unstrukturiert).
  */
 final class GiroCodeBuilder
@@ -26,9 +26,9 @@ final class GiroCodeBuilder
     private const DEFAULT_PURPOSE_TEMPLATE = 'Bestellung {orderNumber}';
 
     /**
-     * Gibt den fertigen BCD-Datensatz zurueck — oder null, wenn ein GiroCode nach EPC-Regeln
-     * nicht bildbar ist (Fremdwaehrung, fehlende/ungueltige IBAN, fehlender Empfaenger,
-     * Betrag ausserhalb 0,01–999.999.999,99). Der Aufrufer laesst dann fail-soft den QR weg.
+     * Gibt den fertigen BCD-Datensatz zurück — oder null, wenn ein GiroCode nach EPC-Regeln
+     * nicht bildbar ist (Fremdwährung, fehlende/ungültige IBAN, fehlender Empfänger,
+     * Betrag ausserhalb 0,01–999.999.999,99). Der Aufrufer lässt dann fail-soft den QR weg.
      */
     public function build(
         string $recipient,
@@ -43,7 +43,7 @@ final class GiroCodeBuilder
         $iban = $this->normalize($iban);
         $bic = $this->normalize($bic);
 
-        // GiroCode unterstuetzt ausschliesslich EUR.
+        // GiroCode unterstützt ausschliesslich EUR.
         if (strtoupper(trim($currencyIso)) !== 'EUR') {
             return null;
         }
@@ -91,7 +91,7 @@ final class GiroCodeBuilder
     }
 
     /**
-     * Format-Plausibilitaet + ISO-7064-Mod-97-Pruefung (keine Bank-Existenzpruefung).
+     * Format-Plausibilität + ISO-7064-Mod-97-Prüfung (keine Bank-Existenzprüfung).
      */
     private function isValidIban(string $iban): bool
     {

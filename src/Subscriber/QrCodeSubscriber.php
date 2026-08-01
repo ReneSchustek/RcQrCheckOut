@@ -14,11 +14,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Throwable;
 
 /**
- * Haengt auf der Bestellbestaetigungs-Seite einen GiroCode (SEPA-Ueberweisung als QR) an die Page,
- * damit der Kunde ihn mit seiner Banking-App scannt und die Ueberweisung vorausgefuellt anstoesst.
+ * Hängt auf der Bestellbestätigungs-Seite einen GiroCode (SEPA-Ueberweisung als QR) an die Page,
+ * damit der Kunde ihn mit seiner Banking-App scannt und die Ueberweisung vorausgefüllt anstoesst.
  *
  * Erscheint nur, wenn: Plugin aktiv, die Zahlart der Bestellung in der konfigurierten Liste liegt,
- * eine IBAN gepflegt ist und die Bestellwaehrung EUR ist. Sonst fail-soft (kein QR, kein Fehler).
+ * eine IBAN gepflegt ist und die Bestellwährung EUR ist. Sonst fail-soft (kein QR, kein Fehler).
  */
 class QrCodeSubscriber implements EventSubscriberInterface
 {
@@ -56,8 +56,8 @@ class QrCodeSubscriber implements EventSubscriberInterface
         $order = $event->getPage()->getOrder();
         $orderId = $order->getId();
 
-        // Zahlart der Bestellung ermitteln (primaere Transaktion, sonst juengste) und gegen die
-        // konfigurierte Zahlarten-Liste pruefen. Leere Liste => bewusst fuer keine Zahlart aktiv.
+        // Zahlart der Bestellung ermitteln (primäre Transaktion, sonst jüngste) und gegen die
+        // konfigurierte Zahlarten-Liste prüfen. Leere Liste => bewusst für keine Zahlart aktiv.
         $transaction = $order->getPrimaryOrderTransaction() ?? $order->getTransactions()?->last();
         $paymentMethodId = $transaction?->getPaymentMethodId();
         if ($paymentMethodId === null
@@ -82,7 +82,7 @@ class QrCodeSubscriber implements EventSubscriberInterface
                 (string) $this->systemConfigService->getString(self::CONFIG_PURPOSE, $salesChannelId),
             );
 
-            // Kein bildbarer GiroCode (Fremdwaehrung, IBAN fehlt/ungueltig, Betrag ungueltig) => kein QR.
+            // Kein bildbarer GiroCode (Fremdwährung, IBAN fehlt/ungültig, Betrag ungültig) => kein QR.
             if ($giroCode === null) {
                 return;
             }
@@ -90,7 +90,7 @@ class QrCodeSubscriber implements EventSubscriberInterface
             $svg = $this->qrCodeService->generateSvg($giroCode, $this->getSize($salesChannelId));
         } catch (Throwable $exception) {
             // Fail-soft: der QR-Code ist dekorativ. Ein Fehler darf die bereits abgeschlossene
-            // Bestellbestaetigung niemals mit einem 500 abreissen — nur loggen.
+            // Bestellbestätigung niemals mit einem 500 abreissen — nur loggen.
             $this->logger->error('RcQrCheckOut: GiroCode-Generierung fehlgeschlagen', [
                 'orderId' => $orderId,
                 'exception' => $exception::class,

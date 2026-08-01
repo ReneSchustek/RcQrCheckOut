@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  * `sw_extends`-Block, den es im Ziel-Template nicht gibt, wird von Twig
  * stillschweigend ignoriert -- das Markup rendert dann nie (genau dieser Defekt
  * trat auf: `page_checkout_finish_information` existiert im Core nicht).
- * Dieser Test verhindert einen Rueckfall auf einen Phantom-Block.
+ * Dieser Test verhindert einen Rückfall auf einen Phantom-Block.
  */
 final class TwigTemplateContractTest extends TestCase
 {
@@ -43,7 +43,7 @@ final class TwigTemplateContractTest extends TestCase
 
     public function testKeinPhantomBlock(): void
     {
-        // Der frueher genutzte Block existiert im Core nicht -> darf nie zurueckkehren.
+        // Der früher genutzte Block existiert im Core nicht -> darf nie zurückkehren.
         self::assertStringNotContainsString(
             'page_checkout_finish_information',
             $this->finishTemplate(),

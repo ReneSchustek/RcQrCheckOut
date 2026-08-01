@@ -10,16 +10,16 @@
             <name>qrCodeEnabled</name>
             <label>GiroCode anzeigen</label>
             <label lang="en-GB">Show GiroCode</label>
-            <helpText>Aktiviert den GiroCode (Zahlungs-QR) auf der Bestellbestaetigungs-Seite.</helpText>
+            <helpText>Aktiviert den GiroCode (Zahlungs-QR) auf der Bestellbestätigungs-Seite.</helpText>
             <helpText lang="en-GB">Activates the GiroCode (payment QR) on the order confirmation page.</helpText>
             <defaultValue>true</defaultValue>
         </input-field>
 
         <input-field type="int">
             <name>qrCodeSize</name>
-            <label>QR-Code-Groesse (Pixel)</label>
+            <label>QR-Code-Größe (Pixel)</label>
             <label lang="en-GB">QR code size (pixels)</label>
-            <helpText>Kantenlaenge in Pixeln. Wird auf 64-1024 begrenzt.</helpText>
+            <helpText>Kantenlänge in Pixeln. Wird auf 64-1024 begrenzt.</helpText>
             <helpText lang="en-GB">Edge length in pixels. Clamped to 64-1024.</helpText>
             <defaultValue>200</defaultValue>
             <min>64</min>
@@ -36,15 +36,15 @@
             <entity>payment_method</entity>
             <label>Zahlarten mit GiroCode</label>
             <label lang="en-GB">Payment methods with GiroCode</label>
-            <helpText>Der GiroCode erscheint nur bei Bestellungen mit diesen Zahlarten (z. B. Vorkasse). Leer = fuer keine Zahlart.</helpText>
+            <helpText>Der GiroCode erscheint nur bei Bestellungen mit diesen Zahlarten (z. B. Vorkasse). Leer = für keine Zahlart.</helpText>
             <helpText lang="en-GB">The GiroCode only appears for orders using these payment methods (e.g. prepayment). Empty = none.</helpText>
         </component>
 
         <input-field type="text">
             <name>recipient</name>
-            <label>Empfaenger (Kontoinhaber)</label>
+            <label>Empfänger (Kontoinhaber)</label>
             <label lang="en-GB">Beneficiary (account holder)</label>
-            <helpText>Name des Zahlungsempfaengers. Pflicht fuer den GiroCode. Max. 70 Zeichen.</helpText>
+            <helpText>Name des Zahlungsempfängers. Pflicht für den GiroCode. Max. 70 Zeichen.</helpText>
             <helpText lang="en-GB">Name of the payee. Required for the GiroCode. Max. 70 characters.</helpText>
         </input-field>
 
@@ -52,7 +52,7 @@
             <name>iban</name>
             <label>IBAN</label>
             <label lang="en-GB">IBAN</label>
-            <helpText>IBAN des Empfaengerkontos. Pflicht. Wird per Mod-97 geprueft; nur EUR.</helpText>
+            <helpText>IBAN des Empfängerkontos. Pflicht. Wird per Mod-97 geprüft; nur EUR.</helpText>
             <helpText lang="en-GB">IBAN of the beneficiary account. Required. Validated via mod-97; EUR only.</helpText>
         </input-field>
 
@@ -60,7 +60,7 @@
             <name>bic</name>
             <label>BIC (optional)</label>
             <label lang="en-GB">BIC (optional)</label>
-            <helpText>BIC des Empfaengerkontos. Optional (bei SEPA-Ueberweisungen innerhalb Deutschlands nicht noetig).</helpText>
+            <helpText>BIC des Empfängerkontos. Optional (bei SEPA-Ueberweisungen innerhalb Deutschlands nicht nötig).</helpText>
             <helpText lang="en-GB">BIC of the beneficiary account. Optional (not needed for domestic SEPA transfers).</helpText>
         </input-field>
 

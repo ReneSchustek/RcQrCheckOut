@@ -1,8 +1,8 @@
 #!/bin/sh
 # Stellt sicher dass die Composer-Dependency von RcQrCheckOut auf dem
-# Shopware-Root verfuegbar ist, bevor plugin:install ausgefuehrt wird.
+# Shopware-Root verfügbar ist, bevor plugin:install ausgeführt wird.
 #
-# Idempotent: prueft zuerst ob das Paket schon da ist und macht dann no-op.
+# Idempotent: prüft zuerst ob das Paket schon da ist und macht dann no-op.
 #
 # Aufruf:
 #   ./bin/ensure-deps.sh               # erwartet pwd = Shopware-Root
@@ -24,7 +24,7 @@ if [ ! -f "$shopware_root/composer.json" ]; then
 fi
 
 if ! grep -q '"shopware/core"' "$shopware_root/composer.json"; then
-    echo "ERR: $shopware_root/composer.json enthaelt keine shopware/core-Dependency." >&2
+    echo "ERR: $shopware_root/composer.json enthält keine shopware/core-Dependency." >&2
     exit 1
 fi
 

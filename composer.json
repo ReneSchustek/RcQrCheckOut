@@ -1,6 +1,6 @@
 {
     "name": "ruhrcoder/rc-qr-checkout",
-    "description": "Shopware 6 Plugin — QR-Code auf der Bestellbestaetigungs-Seite fuer mobile Anzeige der Order",
+    "description": "Shopware 6 Plugin — QR-Code auf der Bestellbestätigungs-Seite für mobile Anzeige der Order",
     "type": "shopware-platform-plugin",
     "license": "MIT",
     "version": "2.0.0",
@@ -28,7 +28,7 @@
             "en-GB": "QR Code Checkout"
         },
         "description": {
-            "de-DE": "Zeigt einen QR-Code auf der Bestellbestaetigungs-Seite zur mobilen Anzeige der Bestellung.",
+            "de-DE": "Zeigt einen QR-Code auf der Bestellbestätigungs-Seite zur mobilen Anzeige der Bestellung.",
             "en-GB": "Shows a QR code on the order confirmation page for mobile order display."
         },
         "manufacturerLink": {

@@ -9,7 +9,7 @@ use Ruhrcoder\RcQrCheckOut\Service\GiroCodeBuilder;
 
 final class GiroCodeBuilderTest extends TestCase
 {
-    // Kanonische, gueltige deutsche Beispiel-IBAN (besteht die Mod-97-Pruefung).
+    // Kanonische, gültige deutsche Beispiel-IBAN (besteht die Mod-97-Prüfung).
     private const VALID_IBAN = 'DE89370400440532013000';
 
     private GiroCodeBuilder $builder;
@@ -48,10 +48,10 @@ final class GiroCodeBuilderTest extends TestCase
 
     public function testPurposeTemplatePlaceholders(): void
     {
-        $result = $this->builder->build('Shop', self::VALID_IBAN, '', 49.9, 'EUR', 'SW42', 'Zahlung {orderNumber} ueber {amount} EUR');
+        $result = $this->builder->build('Shop', self::VALID_IBAN, '', 49.9, 'EUR', 'SW42', 'Zahlung {orderNumber} über {amount} EUR');
 
         self::assertNotNull($result);
-        self::assertSame('Zahlung SW42 ueber 49,90 EUR', explode("\n", $result)[9]);
+        self::assertSame('Zahlung SW42 über 49,90 EUR', explode("\n", $result)[9]);
     }
 
     public function testDefaultPurposeWhenTemplateEmpty(): void
@@ -77,7 +77,7 @@ final class GiroCodeBuilderTest extends TestCase
 
     public function testRejectsInvalidIban(): void
     {
-        // Falsche Pruefziffer / kaputte IBAN.
+        // Falsche Prüfziffer / kaputte IBAN.
         self::assertNull($this->builder->build('Shop', 'DE00370400440532013000', '', 10.0, 'EUR', 'SW1'));
         self::assertNull($this->builder->build('Shop', 'NICHTEINEIBAN', '', 10.0, 'EUR', 'SW1'));
         self::assertNull($this->builder->build('Shop', '', '', 10.0, 'EUR', 'SW1'));
