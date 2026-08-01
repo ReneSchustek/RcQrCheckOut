@@ -14,8 +14,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Throwable;
 
 /**
- * Hängt auf der Bestellbestätigungs-Seite einen GiroCode (SEPA-Ueberweisung als QR) an die Page,
- * damit der Kunde ihn mit seiner Banking-App scannt und die Ueberweisung vorausgefüllt anstoesst.
+ * Hängt auf der Bestellbestätigungs-Seite einen GiroCode (SEPA-Überweisung als QR) an die Page,
+ * damit der Kunde ihn mit seiner Banking-App scannt und die Überweisung vorausgefüllt anstoesst.
  *
  * Erscheint nur, wenn: Plugin aktiv, die Zahlart der Bestellung in der konfigurierten Liste liegt,
  * eine IBAN gepflegt ist und die Bestellwährung EUR ist. Sonst fail-soft (kein QR, kein Fehler).

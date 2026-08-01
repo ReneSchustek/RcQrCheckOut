@@ -18,7 +18,7 @@ class QrCodeService
     /**
      * Erzeugt ein QR-Code-SVG für die übergebenen Daten (hier: der GiroCode-BCD-Datensatz).
      * Rückgabe ist das vollständige SVG-Markup, inline einbettbar in Twig (via `|raw` — der
-     * Inhalt kommt ausschliesslich aus endroid/qr-code, kein User-Input im Render-Pfad).
+     * Inhalt kommt ausschließlich aus endroid/qr-code, kein User-Input im Render-Pfad).
      */
     public function generateSvg(string $data, int $size = self::DEFAULT_SIZE): string
     {

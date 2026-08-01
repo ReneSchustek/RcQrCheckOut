@@ -6,7 +6,7 @@
 
 ### Geändert (Breaking — neuer Zweck)
 
-- **Der QR-Code auf der Bestellbestätigung ist jetzt ein GiroCode (Zahlungs-QR), kein Bestell-Link mehr.** Bisher kodierte der Code die Order-Detail-URL („Bestellung mobil ansehen") — das hatte keinen echten Mehrwert, da die Bestellung ohnehin per Link und Bestätigungs-Mail erreichbar ist. Jetzt präsentiert das Plugin am Kauf-Ende die **Bankverbindung als GiroCode** (EPC069-12 / „BCD"): Der Kunde scannt ihn mit seiner Banking-App und die **SEPA-Ueberweisung** ist mit Empfänger, IBAN, **Betrag** und **Bestellnummer** (Verwendungszweck) vorausgefüllt — der eigentliche Zweck des Plugins, v. a. für Vorkasse.
+- **Der QR-Code auf der Bestellbestätigung ist jetzt ein GiroCode (Zahlungs-QR), kein Bestell-Link mehr.** Bisher kodierte der Code die Order-Detail-URL („Bestellung mobil ansehen") — das hatte keinen echten Mehrwert, da die Bestellung ohnehin per Link und Bestätigungs-Mail erreichbar ist. Jetzt präsentiert das Plugin am Kauf-Ende die **Bankverbindung als GiroCode** (EPC069-12 / „BCD"): Der Kunde scannt ihn mit seiner Banking-App und die **SEPA-Überweisung** ist mit Empfänger, IBAN, **Betrag** und **Bestellnummer** (Verwendungszweck) vorausgefüllt — der eigentliche Zweck des Plugins, v. a. für Vorkasse.
 - **Neue Konfiguration:** Zahlarten-Auswahl (der GiroCode erscheint nur für diese), Empfänger, IBAN (Mod-97-geprüft), BIC (optional), Verwendungszweck-Vorlage. Alles pro Sales-Channel.
 - **Gating & Fail-Soft:** Der GiroCode erscheint nur bei passender Zahlart, gepflegter IBAN und **EUR**-Bestellung; sonst wird er weggelassen (nie ein Seitenfehler).
 - **Entfernt:** die Order-Link-Funktion (`OrderDetailUrlBuilder`) samt Deep-Link-Route.

@@ -60,7 +60,7 @@
             <name>bic</name>
             <label>BIC (optional)</label>
             <label lang="en-GB">BIC (optional)</label>
-            <helpText>BIC des Empfängerkontos. Optional (bei SEPA-Ueberweisungen innerhalb Deutschlands nicht nötig).</helpText>
+            <helpText>BIC des Empfängerkontos. Optional (bei SEPA-Überweisungen innerhalb Deutschlands nicht nötig).</helpText>
             <helpText lang="en-GB">BIC of the beneficiary account. Optional (not needed for domestic SEPA transfers).</helpText>
         </input-field>
 

@@ -41,7 +41,7 @@ final class QrCodeServiceTest extends TestCase
         $service = new QrCodeService();
         $svg = $service->generateSvg('https://example.com', 5000);
 
-        // Erwartung: grosse Werte werden auf 1024 heruntergeclampt + Margin (final < 1100)
+        // Erwartung: große Werte werden auf 1024 heruntergeclampt + Margin (final < 1100)
         self::assertMatchesRegularExpression('/width="10[0-9]{2}px?"/', $svg);
     }
 

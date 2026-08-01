@@ -4,7 +4,7 @@ Shopware 6 Plugin — GiroCode (Zahlungs-QR) auf der Bestellbestätigungs-Seite.
 
 ## Was das Plugin macht
 
-Nach Abschluss einer Bestellung erscheint auf der Finish-Seite ein **GiroCode** (EPC069-12 / „BCD") — ein Zahlungs-QR-Code für Banking-Apps. Der Kunde scannt ihn mit seiner Banking-App und die **SEPA-Ueberweisung** ist mit Empfänger, IBAN, **Betrag** und **Bestellnummer** als Verwendungszweck vorausgefüllt. Ideal für Vorkasse.
+Nach Abschluss einer Bestellung erscheint auf der Finish-Seite ein **GiroCode** (EPC069-12 / „BCD") — ein Zahlungs-QR-Code für Banking-Apps. Der Kunde scannt ihn mit seiner Banking-App und die **SEPA-Überweisung** ist mit Empfänger, IBAN, **Betrag** und **Bestellnummer** als Verwendungszweck vorausgefüllt. Ideal für Vorkasse.
 
 Der GiroCode erscheint nur, wenn:
 

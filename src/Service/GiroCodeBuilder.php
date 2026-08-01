@@ -6,7 +6,7 @@ namespace Ruhrcoder\RcQrCheckOut\Service;
 
 /**
  * Baut den GiroCode-Datensatz nach EPC069-12 („BCD"), den deutsche Banking-Apps als
- * SEPA-Ueberweisung einlesen. Reiner, seiteneffektfreier Builder — die Validierung
+ * SEPA-Überweisung einlesen. Reiner, seiteneffektfreier Builder — die Validierung
  * (IBAN Mod-97, EUR-Pflicht, Längen, Betragsformat) ist vollständig gekapselt.
  *
  * Der Datensatz besteht aus LF-getrennten Zeilen (max. 331 Bytes gesamt):
@@ -43,7 +43,7 @@ final class GiroCodeBuilder
         $iban = $this->normalize($iban);
         $bic = $this->normalize($bic);
 
-        // GiroCode unterstützt ausschliesslich EUR.
+        // GiroCode unterstützt ausschließlich EUR.
         if (strtoupper(trim($currencyIso)) !== 'EUR') {
             return null;
         }
