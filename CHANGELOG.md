@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.1] - 2026-08-03 — Der QR-Code bleibt innerhalb dessen, was Banking-Apps annehmen
+
+> **Deployment:** `php bin/console plugin:update RcQrCheckOut && php bin/console cache:clear`.
+
+### Behoben
+
+- **Ein langer Verwendungszweck konnte einen Code erzeugen, den Banking-Apps zurückweisen.** Der Zahlungsstandard begrenzt den gesamten Datensatz auf 331 Byte; begrenzt waren bisher nur die Einzelfelder, und zwar nach Zeichen. Ein Umlaut ist ein Zeichen, belegt aber zwei Byte — im ungünstigsten Fall kam fast das Anderthalbfache des Erlaubten heraus. Aufgefallen wäre es niemandem: Der Code wird erzeugt und angezeigt, und erst beim Scannen passiert nichts. Der Verwendungszweck wird jetzt so weit gekürzt, dass der Datensatz passt; Empfänger, IBAN und Betrag bleiben unangetastet.
+- **Eine falsch eingetippte BIC wanderte ungeprüft in den Code.** Sie ist im verwendeten Standard optional — eine leere BIC ist gültig, eine falsche nicht. Entspricht die Eingabe nicht dem BIC-Format, bleibt das Feld jetzt leer, statt den Code unbrauchbar zu machen.
+
 ## [2.0.0] - 2026-07-21 — Neuausrichtung: GiroCode statt Order-Link (Breaking)
 
 > **Deployment:** `php bin/console plugin:update RcQrCheckOut && php bin/console cache:clear`. Danach unter Konfiguration die Bankverbindung (IBAN/Empfänger) und die Zahlarten hinterlegen. Kein Schema-Break, keine neuen Abhängigkeiten.

@@ -26,6 +26,23 @@ final class GiroCodeBuilder
     private const DEFAULT_PURPOSE_TEMPLATE = 'Bestellung {orderNumber}';
 
     /**
+     * Höchstlänge des gesamten Datensatzes nach EPC069-12 — in **Bytes**, nicht in Zeichen.
+     *
+     * Der Unterschied ist der ganze Punkt: Ein Umlaut zählt als ein Zeichen und belegt in UTF-8
+     * zwei Bytes. Die Feldgrenzen (70 / 140 Zeichen) allein lassen im ungünstigsten Fall knapp
+     * 500 Bytes zu — die App bekommt dann einen Datensatz, den sie zurückweisen darf.
+     */
+    private const MAX_PAYLOAD_BYTES = 331;
+
+    /**
+     * ISO 9362: acht oder elf Stellen, festes Muster.
+     *
+     * In Version 002 ist die BIC **optional**. Eine leere ist gültig, eine falsche nicht —
+     * eine ungültige Eingabe wegzulassen ist deshalb strikt besser, als sie mitzuschicken.
+     */
+    private const BIC_PATTERN = '/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/';
+
+    /**
      * Gibt den fertigen BCD-Datensatz zurück — oder null, wenn ein GiroCode nach EPC-Regeln
      * nicht bildbar ist (Fremdwährung, fehlende/ungültige IBAN, fehlender Empfänger,
      * Betrag ausserhalb 0,01–999.999.999,99). Der Aufrufer lässt dann fail-soft den QR weg.
@@ -54,6 +71,11 @@ final class GiroCodeBuilder
             return null;
         }
 
+        if ($bic !== '' && preg_match(self::BIC_PATTERN, $bic) !== 1) {
+            // Lieber ohne als mit einer falschen: Version 002 erlaubt das leere Feld.
+            $bic = '';
+        }
+
         $purpose = $this->renderPurpose($purposeTemplate, $orderNumber, $amount);
 
         $lines = [
@@ -69,7 +91,38 @@ final class GiroCodeBuilder
             $this->clamp($purpose, self::MAX_REMITTANCE),  // unstrukturierter Verwendungszweck
         ];
 
-        return implode("\n", $lines);
+        return $this->fitToPayloadLimit($lines);
+    }
+
+    /**
+     * Hält den Datensatz unter der Byte-Grenze — notfalls, indem der Verwendungszweck kürzer wird.
+     *
+     * Der Verwendungszweck ist das einzige elastische Feld: Empfänger, IBAN und Betrag sind
+     * Angaben, die stimmen müssen. Passt es auch dann nicht, gibt es keinen Code. Ein fehlender
+     * QR ist ehrlicher als einer, der beim Scannen nichts tut — da hält der Kunde das Handy
+     * schon an den Bildschirm.
+     *
+     * @param list<string> $lines
+     */
+    private function fitToPayloadLimit(array $lines): ?string
+    {
+        $purposeIndex = \count($lines) - 1;
+        $purpose = $lines[$purposeIndex];
+
+        // Geradeaus statt schlau: Zeichen für Zeichen kürzen und jedes Mal nachmessen. Eine
+        // Rechnung mit Byte-Differenzen wäre schneller und hätte genau die Sorte Fehler, die
+        // hier niemand bemerkt — der Datensatz wäre dann still einen Hauch zu lang. Gekürzt wird
+        // an Zeichengrenzen: Ein abgeschnittenes Mehrbyte-Zeichen ergäbe ungültiges UTF-8.
+        for ($length = mb_strlen($purpose); $length >= 0; --$length) {
+            $lines[$purposeIndex] = mb_substr($purpose, 0, $length);
+            $payload = implode("\n", $lines);
+
+            if (\strlen($payload) <= self::MAX_PAYLOAD_BYTES) {
+                return $payload;
+            }
+        }
+
+        return null;
     }
 
     private function renderPurpose(string $template, string $orderNumber, float $amount): string

@@ -24,7 +24,7 @@ final class TwigTemplateContractTest extends TestCase
         return $content;
     }
 
-    public function testErweitertDieCoreFinishSeite(): void
+    public function testExtendsTheCoreFinishPage(): void
     {
         self::assertStringContainsString(
             "{% sw_extends '@Storefront/storefront/page/checkout/finish/index.html.twig' %}",
@@ -41,7 +41,7 @@ final class TwigTemplateContractTest extends TestCase
         );
     }
 
-    public function testKeinPhantomBlock(): void
+    public function testNoPhantomBlock(): void
     {
         // Der früher genutzte Block existiert im Core nicht -> darf nie zurückkehren.
         self::assertStringNotContainsString(

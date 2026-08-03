@@ -115,4 +115,145 @@ final class GiroCodeBuilderTest extends TestCase
         self::assertSame(70, mb_strlen($lines[5]));
         self::assertSame(140, mb_strlen($lines[9]));
     }
+
+    /**
+     * Was: Ein Datensatz, der die Byte-Grenze sprengt.
+     * Warum: EPC069-12 begrenzt den **gesamten** Datensatz auf 331 Bytes. Begrenzt waren bisher
+     *        nur die Einzelfelder, und zwar in Zeichen — ein Umlaut ist ein Zeichen und zwei
+     *        Bytes. Im ungünstigsten Fall kamen knapp 500 Bytes heraus. Aufgefallen wäre das
+     *        niemandem: Der Code wird erzeugt, angezeigt, und erst beim Scannen passiert nichts —
+     *        während der Kunde das Handy schon an den Bildschirm hält.
+     * Erwartet: Der Datensatz bleibt unter der Grenze.
+     */
+    public function testTheRecordStaysWithinTheByteLimit(): void
+    {
+        $result = (new GiroCodeBuilder())->build(
+            str_repeat('Ä', 70),            // 70 Zeichen, 140 Bytes
+            'DE02120300000000202051',
+            'BYLADEM1001',
+            1234.56,
+            'EUR',
+            '10001',
+            str_repeat('Ü', 140),           // 140 Zeichen, 280 Bytes
+        );
+
+        self::assertNotNull($result);
+        self::assertLessThanOrEqual(331, \strlen($result));
+    }
+
+    /**
+     * Was: Der Verwendungszweck wird gekürzt, alles andere bleibt.
+     * Warum: Empfänger, IBAN und Betrag sind Angaben, die stimmen müssen — an ihnen darf nicht
+     *        gekürzt werden. Der Verwendungszweck ist das einzige elastische Feld.
+     * Erwartet: IBAN und Betrag unverändert, Verwendungszweck kürzer als angefordert.
+     */
+    public function testOnlyTheRemittanceIsShortened(): void
+    {
+        $result = (new GiroCodeBuilder())->build(
+            str_repeat('Ä', 70),
+            'DE02120300000000202051',
+            'BYLADEM1001',
+            1234.56,
+            'EUR',
+            '10001',
+            str_repeat('Ü', 140),
+        );
+
+        self::assertNotNull($result);
+        $lines = explode("\n", $result);
+
+        self::assertSame('DE02120300000000202051', $lines[6]);
+        self::assertSame('EUR1234.56', $lines[7]);
+        self::assertLessThan(140, mb_strlen($lines[9]));
+    }
+
+    /**
+     * Was: Gekürzt wird an Zeichengrenzen.
+     * Warum: Ein abgeschnittenes Mehrbyte-Zeichen ergibt ungültiges UTF-8 — der Datensatz wäre
+     *        dann aus einem zweiten Grund kaputt, und diesmal auf eine Art, die schwerer zu
+     *        finden ist.
+     * Erwartet: gültiges UTF-8.
+     */
+    public function testShorteningKeepsValidUtf8(): void
+    {
+        $result = (new GiroCodeBuilder())->build(
+            str_repeat('Ä', 70),
+            'DE02120300000000202051',
+            'BYLADEM1001',
+            1234.56,
+            'EUR',
+            '10001',
+            str_repeat('Ü', 140),
+        );
+
+        self::assertNotNull($result);
+        self::assertTrue(mb_check_encoding($result, 'UTF-8'));
+    }
+
+    /**
+     * Was: Eine unsinnige BIC.
+     * Warum: In Version 002 ist die BIC **optional**. Eine leere ist gültig, eine falsche nicht —
+     *        eine ungültige Eingabe wegzulassen ist deshalb strikt besser, als sie mitzuschicken.
+     *        Ein Tippfehler des Betreibers erzeugte sonst einen Datensatz, den strenge Apps
+     *        zurückweisen.
+     * Erwartet: Das BIC-Feld bleibt leer, der Rest steht.
+     */
+    public function testAnInvalidBicIsLeftOutInsteadOfPassedOn(): void
+    {
+        $result = (new GiroCodeBuilder())->build(
+            'Trummer Edelstahl GmbH',
+            'DE02120300000000202051',
+            'TIPPFEHLER',
+            10.00,
+            'EUR',
+            '10001',
+        );
+
+        self::assertNotNull($result);
+        $lines = explode("\n", $result);
+
+        self::assertSame('', $lines[4], 'eine ungültige BIC darf nicht in den Datensatz');
+        self::assertSame('DE02120300000000202051', $lines[6]);
+    }
+
+    /**
+     * Was: Eine gültige BIC.
+     * Warum: Die Gegenprobe. Eine Prüfung, die alles verwirft, ist so schlecht wie keine.
+     * Erwartet: Sie steht im Datensatz.
+     */
+    public function testAValidBicIsKept(): void
+    {
+        $result = (new GiroCodeBuilder())->build(
+            'Trummer Edelstahl GmbH',
+            'DE02120300000000202051',
+            'BYLADEM1001',
+            10.00,
+            'EUR',
+            '10001',
+        );
+
+        self::assertNotNull($result);
+        self::assertSame('BYLADEM1001', explode("\n", $result)[4]);
+    }
+
+    /**
+     * Was: Die achtstellige BIC-Form.
+     * Warum: ISO 9362 erlaubt acht **oder** elf Stellen. Nur elf zu akzeptieren, verwürfe die
+     *        Hälfte aller gültigen Eingaben.
+     * Erwartet: bleibt erhalten.
+     */
+    public function testTheEightCharacterBicFormIsAccepted(): void
+    {
+        $result = (new GiroCodeBuilder())->build(
+            'Trummer Edelstahl GmbH',
+            'DE02120300000000202051',
+            'BYLADEMM',
+            10.00,
+            'EUR',
+            '10001',
+        );
+
+        self::assertNotNull($result);
+        self::assertSame('BYLADEMM', explode("\n", $result)[4]);
+    }
 }
