@@ -3,23 +3,23 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
 
     <card>
-        <title>Allgemein</title>
+        <title lang="de-DE">Allgemein</title>
         <title lang="en-GB">General</title>
 
         <input-field type="bool">
             <name>qrCodeEnabled</name>
-            <label>GiroCode anzeigen</label>
+            <label lang="de-DE">GiroCode anzeigen</label>
             <label lang="en-GB">Show GiroCode</label>
-            <helpText>Aktiviert den GiroCode (Zahlungs-QR) auf der Bestellbestätigungs-Seite.</helpText>
+            <helpText lang="de-DE">Aktiviert den GiroCode (Zahlungs-QR) auf der Bestellbestätigungs-Seite.</helpText>
             <helpText lang="en-GB">Activates the GiroCode (payment QR) on the order confirmation page.</helpText>
             <defaultValue>true</defaultValue>
         </input-field>
 
         <input-field type="int">
             <name>qrCodeSize</name>
-            <label>QR-Code-Größe (Pixel)</label>
+            <label lang="de-DE">QR-Code-Größe (Pixel)</label>
             <label lang="en-GB">QR code size (pixels)</label>
-            <helpText>Kantenlänge in Pixeln. Wird auf 64-1024 begrenzt.</helpText>
+            <helpText lang="de-DE">Kantenlänge in Pixeln. Wird auf 64-1024 begrenzt.</helpText>
             <helpText lang="en-GB">Edge length in pixels. Clamped to 64-1024.</helpText>
             <defaultValue>200</defaultValue>
             <min>64</min>
@@ -28,47 +28,47 @@
     </card>
 
     <card>
-        <title>Bankverbindung (GiroCode)</title>
+        <title lang="de-DE">Bankverbindung (GiroCode)</title>
         <title lang="en-GB">Bank account (GiroCode)</title>
 
         <component name="sw-entity-multi-id-select">
             <name>paymentMethodIds</name>
             <entity>payment_method</entity>
-            <label>Zahlarten mit GiroCode</label>
+            <label lang="de-DE">Zahlarten mit GiroCode</label>
             <label lang="en-GB">Payment methods with GiroCode</label>
-            <helpText>Der GiroCode erscheint nur bei Bestellungen mit diesen Zahlarten (z. B. Vorkasse). Leer = für keine Zahlart.</helpText>
+            <helpText lang="de-DE">Der GiroCode erscheint nur bei Bestellungen mit diesen Zahlarten (z. B. Vorkasse). Leer = für keine Zahlart.</helpText>
             <helpText lang="en-GB">The GiroCode only appears for orders using these payment methods (e.g. prepayment). Empty = none.</helpText>
         </component>
 
         <input-field type="text">
             <name>recipient</name>
-            <label>Empfänger (Kontoinhaber)</label>
+            <label lang="de-DE">Empfänger (Kontoinhaber)</label>
             <label lang="en-GB">Beneficiary (account holder)</label>
-            <helpText>Name des Zahlungsempfängers. Pflicht für den GiroCode. Max. 70 Zeichen.</helpText>
+            <helpText lang="de-DE">Name des Zahlungsempfängers. Pflicht für den GiroCode. Max. 70 Zeichen.</helpText>
             <helpText lang="en-GB">Name of the payee. Required for the GiroCode. Max. 70 characters.</helpText>
         </input-field>
 
         <input-field type="text">
             <name>iban</name>
-            <label>IBAN</label>
+            <label lang="de-DE">IBAN</label>
             <label lang="en-GB">IBAN</label>
-            <helpText>IBAN des Empfängerkontos. Pflicht. Wird per Mod-97 geprüft; nur EUR.</helpText>
+            <helpText lang="de-DE">IBAN des Empfängerkontos. Pflicht. Wird per Mod-97 geprüft; nur EUR.</helpText>
             <helpText lang="en-GB">IBAN of the beneficiary account. Required. Validated via mod-97; EUR only.</helpText>
         </input-field>
 
         <input-field type="text">
             <name>bic</name>
-            <label>BIC (optional)</label>
+            <label lang="de-DE">BIC (optional)</label>
             <label lang="en-GB">BIC (optional)</label>
-            <helpText>BIC des Empfängerkontos. Optional (bei SEPA-Überweisungen innerhalb Deutschlands nicht nötig).</helpText>
+            <helpText lang="de-DE">BIC des Empfängerkontos. Optional (bei SEPA-Überweisungen innerhalb Deutschlands nicht nötig).</helpText>
             <helpText lang="en-GB">BIC of the beneficiary account. Optional (not needed for domestic SEPA transfers).</helpText>
         </input-field>
 
         <input-field type="text">
             <name>purposeTemplate</name>
-            <label>Verwendungszweck-Vorlage</label>
+            <label lang="de-DE">Verwendungszweck-Vorlage</label>
             <label lang="en-GB">Remittance template</label>
-            <helpText>Platzhalter {orderNumber} und {amount}. Standard: „Bestellung {orderNumber}". Max. 140 Zeichen.</helpText>
+            <helpText lang="de-DE">Platzhalter {orderNumber} und {amount}. Standard: „Bestellung {orderNumber}". Max. 140 Zeichen.</helpText>
             <helpText lang="en-GB">Placeholders {orderNumber} and {amount}. Default: "Bestellung {orderNumber}". Max. 140 characters.</helpText>
             <defaultValue>Bestellung {orderNumber}</defaultValue>
         </input-field>
