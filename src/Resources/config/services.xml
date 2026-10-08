@@ -8,12 +8,31 @@
 
         <service id="Ruhrcoder\RcQrCheckOut\Service\GiroCodeBuilder"/>
 
-        <service id="Ruhrcoder\RcQrCheckOut\Subscriber\QrCodeSubscriber">
+        <service id="Ruhrcoder\RcQrCheckOut\Service\MailTemplateTypeLookup">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service>
+
+        <service id="Ruhrcoder\RcQrCheckOut\Service\GiroCodeResolver">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="Ruhrcoder\RcQrCheckOut\Service\QrCodeService"/>
             <argument type="service" id="Ruhrcoder\RcQrCheckOut\Service\GiroCodeBuilder"/>
+        </service>
+
+        <service id="Ruhrcoder\RcQrCheckOut\Subscriber\QrCodeSubscriber">
+            <argument type="service" id="Ruhrcoder\RcQrCheckOut\Service\GiroCodeResolver"/>
+            <argument type="service" id="Ruhrcoder\RcQrCheckOut\Service\QrCodeService"/>
             <argument type="service" id="logger"/>
             <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Hält das PNG zwischen Prüfen und Versand einer Mail; `kernel.reset` räumt zwischen zwei
+             Anfragen eines langlebigen Arbeitsprozesses auf. -->
+        <service id="Ruhrcoder\RcQrCheckOut\Subscriber\OrderMailGiroCodeSubscriber">
+            <argument type="service" id="Ruhrcoder\RcQrCheckOut\Service\GiroCodeResolver"/>
+            <argument type="service" id="Ruhrcoder\RcQrCheckOut\Service\QrCodeService"/>
+            <argument type="service" id="Ruhrcoder\RcQrCheckOut\Service\MailTemplateTypeLookup"/>
+            <argument type="service" id="logger"/>
+            <tag name="kernel.event_subscriber"/>
+            <tag name="kernel.reset" method="reset"/>
         </service>
     </services>
 </container>

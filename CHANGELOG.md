@@ -1,5 +1,74 @@
 # Changelog
 
+## [2.1.0] - 2026-10-06 — GiroCode auch in der Bestellbestätigung per Mail
+
+> **Deployment:** `php bin/console plugin:update RcQrCheckOut && php bin/console cache:clear`. Der Code
+> erscheint in der Mail erst, wenn die Vorlage „Bestellbestätigung" den Baustein aus der README trägt.
+
+### Neu
+
+- **GiroCode in der Bestellmail.** Bei Vorkasse stellt die Erweiterung der Bestellbestätigung die Variable
+  `rcGiroCode` bereit (Empfänger, IBAN, Betrag, Verwendungszweck) und bettet den Code als PNG mit
+  Content-ID ein; Gmail, Outlook und Apple Mail zeigen ihn im Text. Ohne den Baustein in der Vorlage
+  ändert sich an der Mail nichts, auch kein loser Anhang. Eine schon bezahlte Bestellung („Bestellung
+  erneut senden") bekommt keinen Code. Derselbe Datensatz wie auf der Abschlussseite.
+
+## Unveröffentlicht
+
+- **Messprojekt `benchmarks/`** mit PHPBench für das Zeichnen des GiroCodes und einer Messung des
+  Markups; kommt in kein Ausrollpaket. Ausgangswerte vom 06.10. an einer Kopie des Shops: 11 ms für den
+  üblichen GiroCode, 35 ms für den längsten erlaubten; Markup rund 53 KB, gepackt 3 KB, bei jeder
+  Bildgröße fast gleich. Der Kommentar, über 1024 Pixel wachse nur noch das Markup, ist berichtigt.
+- Zwei Wächter im Testlauf (Zeit, Markup). PHPStan und PHP CS Fixer prüfen auch `benchmarks/`.
+
+## [2.0.5] - 2026-10-05 — Ein ausgeschalteter Zahlcode bleibt aus
+
+> **Deployment:** `php bin/console plugin:update RcQrCheckOut && php bin/console cache:clear`.
+
+### Behoben
+
+- **Ein über die Konsole ausgeschalteter Zahlcode erschien weiter.** Ohne `--json` gesetzt, steht
+  „false“ als Zeichenkette in der Datenbank, und PHP hielt sie für wahr. Jetzt gilt sie als aus;
+  ein unlesbarer Wert ebenso.
+
+### Intern
+
+- Kommentare im ganzen Bestand nachgezogen; ein Wächter hält fest, dass jeder Typ einen Kopf hat.
+- Testnamen auf Englisch.
+
+## [2.0.4] - 2026-10-05 — Der GiroCode erscheint wieder
+
+> **Deployment:** `php bin/console plugin:update RcQrCheckOut && php bin/console cache:clear`.
+> Das Paket bringt die QR-Bibliothek wie bisher im eigenen `vendor` mit.
+
+### Behoben
+
+- **Bei Vorkasse-Bestellungen fehlte seit 2.0.3 der GiroCode auf der Bestätigungsseite.** Die
+  Erweiterung brachte die QR-Bibliothek mit, aber niemand lud sie: Shopware zählt ein mitgeliefertes
+  `vendor` beim Einbau als vorhanden, bindet es zur Laufzeit aber nicht ein. Im Protokoll stand bei
+  jeder dieser Bestellungen „Class Endroid\QrCode\Builder\Builder not found", die Seite selbst lief
+  weiter, nur ohne Code und Bankdaten.
+- Die Erweiterung registriert jetzt beim Start die Namensräume der Bibliothek aus dem eigenen
+  `vendor`, und nur diese. Bringt der Shop die Bibliothek selbst mit, gilt seine Fassung.
+
+## [2.0.3] - 2026-08-27 — Der Abstand steht an einer Stelle, nicht an zweien
+
+### Geändert
+
+- **Der Kasten bringt seinen oberen Abstand nicht mehr selbst mit.** Er stammte aus der Zeit, als
+  die Bestätigungsseite gar keinen Rhythmus hatte, und war die einzige Stelle mit Luft. Seit das
+  Theme allen Kästen denselben Abstand gibt, stünden sonst zwei übereinander — und wer den einen
+  ändert, versteht den anderen nicht.
+
+## [2.0.2] - 2026-08-27 — Beschriftung und Wert stehen wieder beieinander
+
+### Behoben
+
+- **Im Kasten unter dem QR-Code stand „IBAN" neben dem Empfängernamen statt bei der Nummer.** Alle
+  sechs Elemente lagen in einer einzigen Rasterreihe: Beschriftung drei Spalten, Wert sechs — macht
+  neun von zwölf, und in die verbleibenden drei rutschte die nächste Beschriftung. Jetzt hat jedes
+  Paar seine eigene Reihe. Am laufenden Shop mit einer echten Bestellung gesehen.
+
 ## [2.0.1] - 2026-08-03 — Der QR-Code bleibt innerhalb dessen, was Banking-Apps annehmen
 
 > **Deployment:** `php bin/console plugin:update RcQrCheckOut && php bin/console cache:clear`.

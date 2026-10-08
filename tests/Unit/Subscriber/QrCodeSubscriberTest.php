@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Ruhrcoder\RcQrCheckOut\Tests\Unit\Subscriber;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Ruhrcoder\RcQrCheckOut\Service\GiroCodeBuilder;
+use Ruhrcoder\RcQrCheckOut\Service\GiroCodeResolver;
 use Ruhrcoder\RcQrCheckOut\Service\QrCodeService;
 use Ruhrcoder\RcQrCheckOut\Subscriber\QrCodeSubscriber;
 use RuntimeException;
@@ -21,6 +23,10 @@ use Shopware\Storefront\Page\Checkout\Finish\CheckoutFinishPage;
 use Shopware\Storefront\Page\Checkout\Finish\CheckoutFinishPageLoadedEvent;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Sichert die Bedingungen ab, unter denen der GiroCode auf der Bestätigungsseite erscheint, und
+ * dass ein Fehler beim Zeichnen die Seite nicht abbricht.
+ */
 final class QrCodeSubscriberTest extends TestCase
 {
     private const VALID_IBAN = 'DE89370400440532013000';
@@ -39,7 +45,7 @@ final class QrCodeSubscriberTest extends TestCase
         $qrService = $this->createMock(QrCodeService::class);
         $qrService->expects($this->never())->method('generateSvg');
 
-        $subscriber = new QrCodeSubscriber($this->config(enabled: false), $qrService, new GiroCodeBuilder(), new NullLogger());
+        $subscriber = new QrCodeSubscriber(new GiroCodeResolver($this->config(enabled: false), new GiroCodeBuilder()), $qrService, new NullLogger());
         $event = $this->createEvent();
 
         $subscriber->onFinishPageLoaded($event);
@@ -47,13 +53,41 @@ final class QrCodeSubscriberTest extends TestCase
         self::assertFalse($event->getPage()->hasExtension('rcQrCheckOut'));
     }
 
+    /**
+     * Über die Konsole ohne `--json` gesetzt, steht der Schalter als Zeichenkette in der Datenbank.
+     * PHP hält „false" für wahr; ausgeschaltet muss trotzdem aus heißen.
+     */
+    #[DataProvider('switchedOffAsText')]
+    public function testASwitchStoredAsTextStaysOff(string $stored): void
+    {
+        $qrService = $this->createMock(QrCodeService::class);
+        $qrService->expects($this->never())->method('generateSvg');
+
+        $subscriber = new QrCodeSubscriber(new GiroCodeResolver($this->config(enabled: $stored), new GiroCodeBuilder()), $qrService, new NullLogger());
+        $event = $this->createEvent();
+
+        $subscriber->onFinishPageLoaded($event);
+
+        self::assertFalse($event->getPage()->hasExtension('rcQrCheckOut'));
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function switchedOffAsText(): iterable
+    {
+        yield 'false' => ['false'];
+        yield 'null als Ziffer' => ['0'];
+        yield 'leer' => [''];
+    }
+
     public function testDoesNothingWhenPaymentMethodNotSelected(): void
     {
         $qrService = $this->createMock(QrCodeService::class);
         $qrService->expects($this->never())->method('generateSvg');
 
-        // Order-Zahlart weicht von der konfigurierten Liste ab.
-        $subscriber = new QrCodeSubscriber($this->config(), $qrService, new GiroCodeBuilder(), new NullLogger());
+        // Die Zahlart der Bestellung steht nicht in der eingestellten Liste.
+        $subscriber = new QrCodeSubscriber(new GiroCodeResolver($this->config(), new GiroCodeBuilder()), $qrService, new NullLogger());
         $event = $this->createEvent(paymentMethodId: 'pm-kreditkarte');
 
         $subscriber->onFinishPageLoaded($event);
@@ -66,7 +100,7 @@ final class QrCodeSubscriberTest extends TestCase
         $qrService = $this->createMock(QrCodeService::class);
         $qrService->expects($this->never())->method('generateSvg');
 
-        $subscriber = new QrCodeSubscriber($this->config(), $qrService, new GiroCodeBuilder(), new NullLogger());
+        $subscriber = new QrCodeSubscriber(new GiroCodeResolver($this->config(), new GiroCodeBuilder()), $qrService, new NullLogger());
         $event = $this->createEvent(currencyIso: 'USD');
 
         $subscriber->onFinishPageLoaded($event);
@@ -79,7 +113,7 @@ final class QrCodeSubscriberTest extends TestCase
         $qrService = $this->createMock(QrCodeService::class);
         $qrService->expects($this->never())->method('generateSvg');
 
-        $subscriber = new QrCodeSubscriber($this->config(iban: ''), $qrService, new GiroCodeBuilder(), new NullLogger());
+        $subscriber = new QrCodeSubscriber(new GiroCodeResolver($this->config(iban: ''), new GiroCodeBuilder()), $qrService, new NullLogger());
         $event = $this->createEvent();
 
         $subscriber->onFinishPageLoaded($event);
@@ -95,7 +129,7 @@ final class QrCodeSubscriberTest extends TestCase
             ->with($this->stringContains('BCD'), 300)
             ->willReturn('<svg>giro</svg>');
 
-        $subscriber = new QrCodeSubscriber($this->config(size: 300), $qrService, new GiroCodeBuilder(), new NullLogger());
+        $subscriber = new QrCodeSubscriber(new GiroCodeResolver($this->config(size: 300), new GiroCodeBuilder()), $qrService, new NullLogger());
         $event = $this->createEvent(amount: 49.9);
 
         $subscriber->onFinishPageLoaded($event);
@@ -115,17 +149,17 @@ final class QrCodeSubscriberTest extends TestCase
         $qrService = $this->createMock(QrCodeService::class);
         $qrService->method('generateSvg')->willThrowException(new RuntimeException('endroid kaputt'));
 
-        $subscriber = new QrCodeSubscriber($this->config(), $qrService, new GiroCodeBuilder(), new NullLogger());
+        $subscriber = new QrCodeSubscriber(new GiroCodeResolver($this->config(), new GiroCodeBuilder()), $qrService, new NullLogger());
         $event = $this->createEvent();
 
-        // Darf nicht werfen — Finish-Page bleibt heil, nur keine QR-Extension.
+        // Der Aufruf darf nicht werfen. Die Seite bleibt heil, nur die Erweiterung fehlt.
         $subscriber->onFinishPageLoaded($event);
 
         self::assertFalse($event->getPage()->hasExtension('rcQrCheckOut'));
     }
 
     private function config(
-        bool $enabled = true,
+        bool|string $enabled = true,
         int $size = 200,
         string $iban = self::VALID_IBAN,
     ): SystemConfigService {

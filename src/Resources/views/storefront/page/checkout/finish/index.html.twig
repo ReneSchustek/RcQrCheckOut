@@ -1,12 +1,16 @@
 {% sw_extends '@Storefront/storefront/page/checkout/finish/index.html.twig' %}
 
+{# Der Code steht hinter den Bestelldetails, weil es diesen Block in der Kernvorlage gibt. Ein Block,
+   den die Kernvorlage nicht kennt, bliebe ohne jede Fehlermeldung unsichtbar. #}
 {% block page_checkout_finish_details %}
     {{ parent() }}
 
     {% if page.extensions.rcQrCheckOut is defined and page.extensions.rcQrCheckOut.enabled %}
         {% block page_checkout_finish_rc_qr_checkout %}
             {% set rcQr = page.extensions.rcQrCheckOut %}
-            <div class="rc-qr-checkout card mt-4">
+            {# Der Abstand nach oben kommt aus dem Rhythmus der Seite, nicht von hier. Stünde er
+               an beiden Stellen, würde eine Änderung am einen die andere unverständlich machen. #}
+            <div class="rc-qr-checkout card">
                 <div class="card-body text-center">
                     <h4 class="rc-qr-checkout__title">
                         {{ "rc-qr-checkout.title"|trans }}
@@ -15,16 +19,27 @@
                         {{ "rc-qr-checkout.hint"|trans }}
                     </p>
                     <div class="rc-qr-checkout__code" aria-label="{{ "rc-qr-checkout.ariaLabel"|trans }}">
-                        {# SVG kommt ausschließlich aus endroid/qr-code — kontrollierter Inhalt, kein User-Input. #}
+                        {# Das SVG stammt aus endroid/qr-code und enthält die Daten nur als Muster, nicht als Text. #}
                         {{ rcQr.svg|raw }}
                     </div>
-                    <dl class="rc-qr-checkout__details row justify-content-center mt-3 mb-0 small">
-                        <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.recipient"|trans }}</dt>
-                        <dd class="col-8 col-sm-6 text-start">{{ rcQr.recipient }}</dd>
-                        <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.iban"|trans }}</dt>
-                        <dd class="col-8 col-sm-6 text-start">{{ rcQr.iban }}</dd>
-                        <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.amount"|trans }}</dt>
-                        <dd class="col-8 col-sm-6 text-start">{{ rcQr.amount|currency }}</dd>
+                    {# Jedes Paar aus Beschriftung und Wert bekommt eine eigene Reihe. Ab sm ergeben
+                       Beschriftung 3 und Wert 6 Spalten 9 von 12; stünden alle Paare in einer Reihe, rutschte
+                       die nächste Beschriftung in die freien 3, und „IBAN" stünde neben dem
+                       Empfängernamen statt bei seiner Nummer. Ein `div` um `dt` und `dd` ist in einer
+                       Beschreibungsliste vorgesehen, die Zuordnung bleibt erhalten. #}
+                    <dl class="rc-qr-checkout__details mt-3 mb-0 small">
+                        <div class="row justify-content-center">
+                            <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.recipient"|trans }}</dt>
+                            <dd class="col-8 col-sm-6 text-start mb-1">{{ rcQr.recipient }}</dd>
+                        </div>
+                        <div class="row justify-content-center">
+                            <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.iban"|trans }}</dt>
+                            <dd class="col-8 col-sm-6 text-start mb-1">{{ rcQr.iban }}</dd>
+                        </div>
+                        <div class="row justify-content-center">
+                            <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.amount"|trans }}</dt>
+                            <dd class="col-8 col-sm-6 text-start mb-0">{{ rcQr.amount|currency }}</dd>
+                        </div>
                     </dl>
                 </div>
             </div>

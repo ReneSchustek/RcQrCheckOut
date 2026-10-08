@@ -7,11 +7,11 @@ namespace Ruhrcoder\RcQrCheckOut\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Nagelt die Injektionsstelle des QR-Codes auf der Finish-Seite fest. Ein
- * `sw_extends`-Block, den es im Ziel-Template nicht gibt, wird von Twig
- * stillschweigend ignoriert -- das Markup rendert dann nie (genau dieser Defekt
- * trat auf: `page_checkout_finish_information` existiert im Core nicht).
- * Dieser Test verhindert einen Rückfall auf einen Phantom-Block.
+ * Hält fest, an welchem Block der Bestätigungsseite der QR-Code hängt.
+ *
+ * Einen Block, den es in der Kernvorlage nicht gibt, übergeht Twig ohne Meldung, und das Markup
+ * erscheint nie. `page_checkout_finish_information` ist so ein Block, der verlockend klingt, im
+ * Kern aber fehlt.
  */
 final class TwigTemplateContractTest extends TestCase
 {
@@ -32,7 +32,7 @@ final class TwigTemplateContractTest extends TestCase
         );
     }
 
-    public function testUeberschreibtEinenImCoreExistierendenBlock(): void
+    public function testOverridesABlockThatExistsInCore(): void
     {
         // page_checkout_finish_details ist ein realer Block der Core-Finish-Seite.
         self::assertStringContainsString(
@@ -43,14 +43,14 @@ final class TwigTemplateContractTest extends TestCase
 
     public function testNoPhantomBlock(): void
     {
-        // Der früher genutzte Block existiert im Core nicht -> darf nie zurückkehren.
+        // Diesen Block gibt es im Kern nicht, die Erweiterung wäre an ihm unsichtbar.
         self::assertStringNotContainsString(
             'page_checkout_finish_information',
             $this->finishTemplate(),
         );
     }
 
-    public function testParentBleibtErhalten(): void
+    public function testKeepsTheParentBlock(): void
     {
         self::assertStringContainsString('{{ parent() }}', $this->finishTemplate());
     }

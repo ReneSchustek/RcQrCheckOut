@@ -3,6 +3,7 @@ parameters:
     paths:
         - src
         - tests
+        - benchmarks
     excludePaths:
         - vendor
     bootstrapFiles:

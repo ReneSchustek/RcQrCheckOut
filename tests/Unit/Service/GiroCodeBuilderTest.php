@@ -7,6 +7,10 @@ namespace Ruhrcoder\RcQrCheckOut\Tests\Unit\Service;
 use PHPUnit\Framework\TestCase;
 use Ruhrcoder\RcQrCheckOut\Service\GiroCodeBuilder;
 
+/**
+ * Sichert den GiroCode-Datensatz nach EPC069-12 ab: Aufbau der zehn Zeilen, Ablehnung ungültiger
+ * Eingaben, Kürzung auf 331 Bytes und den Umgang mit der optionalen BIC.
+ */
 final class GiroCodeBuilderTest extends TestCase
 {
     // Kanonische, gültige deutsche Beispiel-IBAN (besteht die Mod-97-Prüfung).
@@ -118,11 +122,11 @@ final class GiroCodeBuilderTest extends TestCase
 
     /**
      * Was: Ein Datensatz, der die Byte-Grenze sprengt.
-     * Warum: EPC069-12 begrenzt den **gesamten** Datensatz auf 331 Bytes. Begrenzt waren bisher
-     *        nur die Einzelfelder, und zwar in Zeichen — ein Umlaut ist ein Zeichen und zwei
-     *        Bytes. Im ungünstigsten Fall kamen knapp 500 Bytes heraus. Aufgefallen wäre das
-     *        niemandem: Der Code wird erzeugt, angezeigt, und erst beim Scannen passiert nichts —
-     *        während der Kunde das Handy schon an den Bildschirm hält.
+     * Warum: EPC069-12 begrenzt den gesamten Datensatz auf 331 Bytes. Wer nur die Einzelfelder in
+     *        Zeichen begrenzt, kommt mit Umlauten auf knapp 500 Bytes, denn ein Umlaut ist ein
+     *        Zeichen und zwei Bytes. Auffallen würde das niemandem: Der Code wird erzeugt und
+     *        angezeigt, und erst beim Scannen passiert nichts, während der Kunde das Handy schon an
+     *        den Bildschirm hält.
      * Erwartet: Der Datensatz bleibt unter der Grenze.
      */
     public function testTheRecordStaysWithinTheByteLimit(): void
@@ -143,8 +147,8 @@ final class GiroCodeBuilderTest extends TestCase
 
     /**
      * Was: Der Verwendungszweck wird gekürzt, alles andere bleibt.
-     * Warum: Empfänger, IBAN und Betrag sind Angaben, die stimmen müssen — an ihnen darf nicht
-     *        gekürzt werden. Der Verwendungszweck ist das einzige elastische Feld.
+     * Warum: Empfänger, IBAN und Betrag sind Angaben, die stimmen müssen, an ihnen darf nicht
+     *        gekürzt werden. Der Verwendungszweck ist das einzige Feld, das nachgeben darf.
      * Erwartet: IBAN und Betrag unverändert, Verwendungszweck kürzer als angefordert.
      */
     public function testOnlyTheRemittanceIsShortened(): void
@@ -169,9 +173,8 @@ final class GiroCodeBuilderTest extends TestCase
 
     /**
      * Was: Gekürzt wird an Zeichengrenzen.
-     * Warum: Ein abgeschnittenes Mehrbyte-Zeichen ergibt ungültiges UTF-8 — der Datensatz wäre
-     *        dann aus einem zweiten Grund kaputt, und diesmal auf eine Art, die schwerer zu
-     *        finden ist.
+     * Warum: Ein abgeschnittenes Mehrbyte-Zeichen ergibt ungültiges UTF-8. Der Datensatz wäre dann
+     *        aus einem zweiten Grund kaputt, und auf eine Art, die schwerer zu finden ist.
      * Erwartet: gültiges UTF-8.
      */
     public function testShorteningKeepsValidUtf8(): void
@@ -192,16 +195,15 @@ final class GiroCodeBuilderTest extends TestCase
 
     /**
      * Was: Eine unsinnige BIC.
-     * Warum: In Version 002 ist die BIC **optional**. Eine leere ist gültig, eine falsche nicht —
-     *        eine ungültige Eingabe wegzulassen ist deshalb strikt besser, als sie mitzuschicken.
-     *        Ein Tippfehler des Betreibers erzeugte sonst einen Datensatz, den strenge Apps
-     *        zurückweisen.
+     * Warum: In Version 002 ist die BIC optional. Eine leere ist gültig, eine falsche nicht, deshalb
+     *        ist es besser, eine ungültige Eingabe wegzulassen, als sie mitzuschicken. Ein
+     *        Tippfehler des Betreibers ergäbe sonst einen Datensatz, den strenge Apps zurückweisen.
      * Erwartet: Das BIC-Feld bleibt leer, der Rest steht.
      */
     public function testAnInvalidBicIsLeftOutInsteadOfPassedOn(): void
     {
         $result = (new GiroCodeBuilder())->build(
-            'Trummer Edelstahl GmbH',
+            'Musterhandel Nord GmbH',
             'DE02120300000000202051',
             'TIPPFEHLER',
             10.00,
@@ -224,7 +226,7 @@ final class GiroCodeBuilderTest extends TestCase
     public function testAValidBicIsKept(): void
     {
         $result = (new GiroCodeBuilder())->build(
-            'Trummer Edelstahl GmbH',
+            'Musterhandel Nord GmbH',
             'DE02120300000000202051',
             'BYLADEM1001',
             10.00,
@@ -238,14 +240,14 @@ final class GiroCodeBuilderTest extends TestCase
 
     /**
      * Was: Die achtstellige BIC-Form.
-     * Warum: ISO 9362 erlaubt acht **oder** elf Stellen. Nur elf zu akzeptieren, verwürfe die
-     *        Hälfte aller gültigen Eingaben.
+     * Warum: ISO 9362 erlaubt acht oder elf Stellen. Wer nur elf akzeptiert, verwirft jede
+     *        gültige achtstellige Eingabe.
      * Erwartet: bleibt erhalten.
      */
     public function testTheEightCharacterBicFormIsAccepted(): void
     {
         $result = (new GiroCodeBuilder())->build(
-            'Trummer Edelstahl GmbH',
+            'Musterhandel Nord GmbH',
             'DE02120300000000202051',
             'BYLADEMM',
             10.00,
