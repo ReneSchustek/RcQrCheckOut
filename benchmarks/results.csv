@@ -1,11 +1,11 @@
 datum;fassung;rechner;instanz;art;messung;ms;streuung
-2026-10-06;2.0.4;devbox;live-clone;dienst;QrCodeBench::benchTypicalGiroCode (64 px);11.288;±1.25% Speicher 13.048mb
-2026-10-06;2.0.4;devbox;live-clone;dienst;QrCodeBench::benchTypicalGiroCode (200 px);11.288;±1.16% Speicher 13.048mb
-2026-10-06;2.0.4;devbox;live-clone;dienst;QrCodeBench::benchTypicalGiroCode (1024 px);11.207;±1.84% Speicher 13.048mb
-2026-10-06;2.0.4;devbox;live-clone;dienst;QrCodeBench::benchLongestGiroCode;36.430;±6.02% Speicher 13.047mb
-2026-10-06;2.0.4;devbox;live-clone;dienst;QrCodeBench::benchBuildRecord;0.005;±3.15% Speicher 13.047mb
-2026-10-06;2.0.4;devbox;live-clone;markup;SVG 64 px;52495;Bytes, gepackt 2882
-2026-10-06;2.0.4;devbox;live-clone;markup;SVG 200 px;53408;Bytes, gepackt 2915
-2026-10-06;2.0.4;devbox;live-clone;markup;SVG 512 px;53883;Bytes, gepackt 3146
-2026-10-06;2.0.4;devbox;live-clone;markup;SVG 1024 px;54054;Bytes, gepackt 3227
-2026-10-06;2.0.4;devbox;live-clone;markup;SVG 2048 px;54054;Bytes, gepackt 3227
+2026-10-06;2.0.4;Testsystem;Kopie;dienst;QrCodeBench::benchTypicalGiroCode (64 px);11.288;±1.25% Speicher 13.048mb
+2026-10-06;2.0.4;Testsystem;Kopie;dienst;QrCodeBench::benchTypicalGiroCode (200 px);11.288;±1.16% Speicher 13.048mb
+2026-10-06;2.0.4;Testsystem;Kopie;dienst;QrCodeBench::benchTypicalGiroCode (1024 px);11.207;±1.84% Speicher 13.048mb
+2026-10-06;2.0.4;Testsystem;Kopie;dienst;QrCodeBench::benchLongestGiroCode;36.430;±6.02% Speicher 13.047mb
+2026-10-06;2.0.4;Testsystem;Kopie;dienst;QrCodeBench::benchBuildRecord;0.005;±3.15% Speicher 13.047mb
+2026-10-06;2.0.4;Testsystem;Kopie;markup;SVG 64 px;52495;Bytes, gepackt 2882
+2026-10-06;2.0.4;Testsystem;Kopie;markup;SVG 200 px;53408;Bytes, gepackt 2915
+2026-10-06;2.0.4;Testsystem;Kopie;markup;SVG 512 px;53883;Bytes, gepackt 3146
+2026-10-06;2.0.4;Testsystem;Kopie;markup;SVG 1024 px;54054;Bytes, gepackt 3227
+2026-10-06;2.0.4;Testsystem;Kopie;markup;SVG 2048 px;54054;Bytes, gepackt 3227

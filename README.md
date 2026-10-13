@@ -1,10 +1,10 @@
 # RcQrCheckOut
 
-Shopware 6 Plugin — GiroCode (Zahlungs-QR) auf der Bestellbestätigungs-Seite.
+Ein Plugin für Shopware 6, das auf der Bestellbestätigungs-Seite einen GiroCode (Zahlungs-QR) zeigt.
 
 ## Was das Plugin macht
 
-Nach Abschluss einer Bestellung erscheint auf der Finish-Seite ein **GiroCode** (EPC069-12 / „BCD") — ein Zahlungs-QR-Code für Banking-Apps. Der Kunde scannt ihn mit seiner Banking-App und die **SEPA-Überweisung** ist mit Empfänger, IBAN, **Betrag** und **Bestellnummer** als Verwendungszweck vorausgefüllt. Ideal für Vorkasse.
+Ist eine Bestellung abgeschlossen, erscheint auf der Finish-Seite ein **GiroCode** (EPC069-12 / „BCD"), also ein Zahlungs-QR-Code für Banking-Apps. Der Kunde scannt ihn mit seiner Banking-App, und die **SEPA-Überweisung** ist mit Empfänger, IBAN, **Betrag** und **Bestellnummer** als Verwendungszweck vorausgefüllt. Gedacht ist das vor allem für Vorkasse.
 
 Der GiroCode erscheint nur, wenn:
 
@@ -13,7 +13,7 @@ Der GiroCode erscheint nur, wenn:
 - eine gültige IBAN gepflegt ist **und**
 - die Bestellwährung EUR ist (GiroCode unterstützt ausschließlich EUR).
 
-Andernfalls wird der QR-Code fail-soft weggelassen (nie ein Seitenfehler).
+Andernfalls wird der QR-Code fail-soft weggelassen, ein Seitenfehler entsteht nie.
 
 ### GiroCode in der Bestellbestätigung per Mail
 
@@ -35,17 +35,17 @@ Vorlage gehört dafür dieser Baustein, etwa unter die Zahlungsart:
 ```
 
 `rcGiroCode.cid` ist `cid:girocode`, das eingebettete PNG (mindestens 200 Pixel, breite Ruhezone). Ein
-`data:`-Bild zeigen viele Mailprogramme nicht an. In der Textfassung tragen dieselben Angaben ohne Bild.
+`data:`-Bild zeigen viele Mailprogramme nicht an. In der Textfassung stehen dieselben Angaben ohne Bild.
 
 ## Voraussetzungen
 
 - Shopware 6.7 oder 6.8
 - PHP 8.2+
-- Composer-Paket `endroid/qr-code` (`^4.8`) im Shopware-Root — siehe Pre-Install-Schritt unten
+- Composer-Paket `endroid/qr-code` (`^4.8`) im Shopware-Root (siehe Pre-Install-Schritt unten)
 
 ## Installation
 
-**Vor der Installation — Composer-Abhängigkeit sicherstellen:** Der Shopware-Plugin-Manager
+**Vor der Installation die Composer-Abhängigkeit sicherstellen.** Der Shopware-Plugin-Manager
 prüft `endroid/qr-code` vor der Aktivierung. Wird das Plugin per Datei-Sync/Symlink unter
 `custom/plugins` betrieben (statt per `composer require` im Projekt), fehlt das Paket sonst im
 Shopware-Root und die Aktivierung bricht ab. Der mitgelieferte, **idempotente** Helfer zieht es
@@ -76,11 +76,11 @@ Admin → Erweiterungen → RcQrCheckOut → Konfiguration:
 - **QR-Code-Größe in Pixeln** (Default: 200, Range 64-1024)
 
 **Bankverbindung (GiroCode)**
-- **Zahlarten mit GiroCode** — für welche Zahlarten der GiroCode erscheint (z. B. Vorkasse). Leer = für keine.
-- **Empfänger (Kontoinhaber)** — Pflicht, max. 70 Zeichen
-- **IBAN** — Pflicht, wird per Mod-97 geprüft
-- **BIC** — optional (bei Inlands-SEPA nicht nötig)
-- **Verwendungszweck-Vorlage** — Platzhalter `{orderNumber}` und `{amount}`, Default „Bestellung {orderNumber}"
+- **Zahlarten mit GiroCode:** für welche Zahlarten der GiroCode erscheint (z. B. Vorkasse). Leer = für keine.
+- **Empfänger (Kontoinhaber):** Pflicht, max. 70 Zeichen
+- **IBAN:** Pflicht, wird per Mod-97 geprüft
+- **BIC:** optional (bei Inlands-SEPA nicht nötig)
+- **Verwendungszweck-Vorlage:** Platzhalter `{orderNumber}` und `{amount}`, Default „Bestellung {orderNumber}"
 
 Alle Felder sind pro Sales-Channel überschreibbar.
 
@@ -98,7 +98,7 @@ kostet: Es läuft bei jedem Aufruf der Abschlussseite einer Vorkasse-Bestellung.
 Markups je Bildgröße, roh und gepackt. Aufruf gegen eine Testinstanz mit Shopware (ddev):
 
 ```bash
-bash benchmarks/run.sh <instanz>
+bash benchmarks/run.sh <instanz> <rechner>
 ```
 
 Die Werte landen in `benchmarks/results.csv`, mit Datum, Fassung und Rechner. Ausgangswerte vom

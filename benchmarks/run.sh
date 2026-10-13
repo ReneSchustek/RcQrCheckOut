@@ -1,10 +1,12 @@
 #!/bin/bash
-# Messlauf des Zahlcodes gegen eine Instanz der DevBox: das Zeichnen des GiroCodes über PHPBench, dazu
+# Messlauf des Zahlcodes gegen eine Shopware-Instanz auf dem Testsystem: das Zeichnen des GiroCodes über PHPBench, dazu
 # die Größe des Markups je Bildgröße. Die Werte werden an benchmarks/results.csv angehängt, mit Datum,
 # Fassung (aus der Instanz, nicht aus dem Quellbaum) und Rechner. Spalte `ms`: der Modus, den PHPBench
 # über die Durchläufe ermittelt; beim Markup steht dort die Zahl der Bytes, in `streuung` die nach gzip.
 #
-# Aufruf vom Arbeitsplatz: bash benchmarks/run.sh [instanz]
+# Aufruf vom Arbeitsplatz: bash benchmarks/run.sh <instanz> <rechner>
+# <rechner> ist der SSH-Name des Testsystems, <instanz> der Ordner der Shopware-Instanz darauf. Beides
+# steht bewusst nicht als Vorgabe im Skript, damit kein Lauf versehentlich gegen die falsche Instanz misst.
 #
 # Eine Seitenmessung gibt es nicht: Die Abschlussseite braucht eine frische Bestellung, und ihre Zeit
 # wäre fast ganz die des Kerns. Was die Erweiterung dazutut, ist das Zeichnen; das wird hier gemessen.
@@ -12,8 +14,8 @@
 # derselben Instanz.
 set -euo pipefail
 
-INSTANCE=${1:-live-clone}
-HOST=devbox
+INSTANCE=${1:?Aufruf: bash benchmarks/run.sh <instanz> <rechner>}
+HOST=${2:?Aufruf: bash benchmarks/run.sh <instanz> <rechner>}
 PLUGIN=RcQrCheckOut
 PHPBENCH_VERSION='^1.7'
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
