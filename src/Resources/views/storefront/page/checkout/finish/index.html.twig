@@ -26,19 +26,23 @@
                        Beschriftung 3 und Wert 6 Spalten 9 von 12; stünden alle Paare in einer Reihe, rutschte
                        die nächste Beschriftung in die freien 3, und „IBAN" stünde neben dem
                        Empfängernamen statt bei seiner Nummer. Ein `div` um `dt` und `dd` ist in einer
-                       Beschreibungsliste vorgesehen, die Zuordnung bleibt erhalten. #}
+                       Beschreibungsliste vorgesehen, die Zuordnung bleibt erhalten.
+
+                       Am Handy steht die Beschriftung über dem Wert: Neben dem Wert bekam sie vier von zwölf
+                       Spalten, und „Empfänger" brach mitten im Wort um. Die IBAN steht in Vierergruppen; umbrechen
+                       kann sie dann nur zwischen zwei Gruppen, nie in einer. #}
                     <dl class="rc-qr-checkout__details mt-3 mb-0 small">
                         <div class="row justify-content-center">
-                            <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.recipient"|trans }}</dt>
-                            <dd class="col-8 col-sm-6 text-start mb-1">{{ rcQr.recipient }}</dd>
+                            <dt class="col-12 col-sm-3 text-sm-end mb-0">{{ "rc-qr-checkout.recipient"|trans }}</dt>
+                            <dd class="col-12 col-sm-6 text-sm-start mb-1">{{ rcQr.recipient }}</dd>
                         </div>
                         <div class="row justify-content-center">
-                            <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.iban"|trans }}</dt>
-                            <dd class="col-8 col-sm-6 text-start mb-1">{{ rcQr.iban }}</dd>
+                            <dt class="col-12 col-sm-3 text-sm-end mb-0">{{ "rc-qr-checkout.iban"|trans }}</dt>
+                            <dd class="col-12 col-sm-6 text-sm-start mb-1">{{ rcQr.iban|replace({' ': ''})|split('', 4)|join(' ') }}</dd>
                         </div>
                         <div class="row justify-content-center">
-                            <dt class="col-4 col-sm-3 text-end">{{ "rc-qr-checkout.amount"|trans }}</dt>
-                            <dd class="col-8 col-sm-6 text-start mb-0">{{ rcQr.amount|currency }}</dd>
+                            <dt class="col-12 col-sm-3 text-sm-end mb-0">{{ "rc-qr-checkout.amount"|trans }}</dt>
+                            <dd class="col-12 col-sm-6 text-sm-start mb-0">{{ rcQr.amount|currency }}</dd>
                         </div>
                     </dl>
                 </div>

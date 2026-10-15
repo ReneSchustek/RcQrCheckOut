@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.1.1] - 2026-10-15: GiroCode-Kasten am Handy lesbar
+
+> **Deployment:** `php bin/console cache:clear`.
+
+### Behoben
+
+- Am Handy steht die Beschriftung (Empfänger, IBAN, Betrag) über dem Wert; „Empfänger" brach vorher mitten im Wort
+  um. Die IBAN steht in Vierergruppen und bricht nur zwischen zwei Gruppen.
+
 ## [2.1.0] - 2026-10-06: GiroCode auch in der Bestellbestätigung per Mail
 
 > **Deployment:** `php bin/console plugin:update RcQrCheckOut && php bin/console cache:clear`. Der Code
