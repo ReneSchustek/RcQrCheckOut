@@ -61,7 +61,7 @@ final class QrCodeServiceTest extends TestCase
 
     /**
      * Wächter aus dem Messprojekt (benchmarks/): Gezeichnet wird bei jedem Aufruf der Abschlussseite,
-     * während der Kunde wartet. Gemessen waren 35 ms für den längsten erlaubten Datensatz; die Grenze
+     * während der Kunde wartet. Gemessen sind 35 ms für den längsten erlaubten Datensatz; die Grenze
      * ist großzügig, damit sie nur bei einem echten Rückschritt anschlägt.
      */
     public function testTheLongestGiroCodeIsDrawnQuickly(): void
@@ -78,7 +78,7 @@ final class QrCodeServiceTest extends TestCase
     }
 
     /**
-     * Das Markup steht in der Seite. Gemessen waren rund 53 KB bei jeder Größe; wächst es deutlich,
+     * Das Markup steht in der Seite. Gemessen sind rund 53 KB bei jeder Größe; wächst es deutlich,
      * hat sich am Zeichnen etwas geändert, das die Seite schwerer macht.
      */
     public function testTheMarkupStaysSmallAtEverySize(): void

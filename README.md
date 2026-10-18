@@ -101,8 +101,8 @@ Markups je Bildgröße, roh und gepackt. Aufruf gegen eine Testinstanz mit Shopw
 bash benchmarks/run.sh <instanz> <rechner>
 ```
 
-Die Werte landen in `benchmarks/results.csv`, mit Datum, Fassung und Rechner. Ausgangswerte vom
-06.10.2026 an einer Kopie des Shops: 11 ms für den üblichen GiroCode, 35 ms für den längsten erlaubten, bei
+Die Werte landen in `benchmarks/results.csv`, mit Datum, Fassung und Rechner. Gemessen sind
+rund 11 ms für den üblichen GiroCode und 35 ms für den längsten erlaubten, bei
 64 wie bei 1024 Pixeln; das Markup rund 53 KB, gepackt 3 KB. Zwei großzügige Wächter in
 `QrCodeServiceTest` laufen mit den normalen Tests. Das Messprojekt kommt in kein Ausrollpaket.
 
