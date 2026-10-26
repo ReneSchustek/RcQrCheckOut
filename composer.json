@@ -2,7 +2,7 @@
     "name": "ruhrcoder/rc-qr-checkout",
     "description": "Shopware 6 Plugin — GiroCode auf der Bestellbestätigungs-Seite für die SEPA-Überweisung per Banking-App",
     "type": "shopware-platform-plugin",
-    "license": "MIT",
+    "license": "proprietary",
     "version": "2.1.1",
     "authors": [
         {
